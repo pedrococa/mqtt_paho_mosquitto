@@ -1,0 +1,33 @@
+name: mqtt-paho-mosquitto
+version: 0.1
+summary: Mosquitto broker and Paho mqtt subscriber and publisher
+description: MQTT example with a Mosquitto server, a Eclipse Paho publisher and a subscriber.
+confinement: strict
+grade: stable
+
+apps:
+  mosquitto:
+    command: usr/sbin/mosquitto -c $SNAP/mosquitto.conf
+    daemon: simple
+    plugs: [network, network-bind]
+  subscribe:
+    command: subscribe.py
+    plugs: [network, network-bind]
+  publish:
+    command: publish.py
+    plugs: [network, network-bind]
+
+
+parts:
+  mosquitto:
+    plugin: dump
+    source: conf
+    stage-packages: [mosquitto]
+  mqtt-client:
+    plugin: python
+    python-version: python3
+    source: https://github.com/eclipse/paho.mqtt.python.git 
+    source-type: git
+  scripts:
+    plugin: dump
+    source: .
